@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AR Path Demo</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.0/aframe/build/aframe-ar.js"></script>
+</head>
+<body>
+    <a-scene embedded arjs="sourceType: webcam;">
+        <a-marker type="image" url="ar-marker.jpg">
+            <!-- Add your 3D model here -->
+            <a-entity id="moving-object" gltf-model="scene.gltf"></a-entity>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
 
+    <script>
+        // Define the path for the object
+        var path = [
+            { x: 0, y: 0, z: -1 },
+            { x: 1, y: 0, z: -1 },
+            { x: 1, y: 0, z: 0 },
+            { x: 0, y: 0, z: 0 },
+        ];
+
+        // Get a reference to the moving object
+        var object = document.querySelector("#moving-object");
+
+        // Set initial position
+        var currentPosition = 0;
+        object.object3D.position.set(path[0].x, path[0].y, path[0].z);
+
+        // Function to update object's position along the path
+        function animateObject() {
+            if (currentPosition < path.length - 1) {
+                currentPosition++;
+            } else {
+                currentPosition = 0;
+            }
+
+            var newPosition = path[currentPosition];
+            object.object3D.position.set(newPosition.x, newPosition.y, newPosition.z);
+            requestAnimationFrame(animateObject);
+        }
+
+        // Start the animation
+        animateObject();
+    </script>
+</body>
+</html>
